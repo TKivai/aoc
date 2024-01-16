@@ -4,7 +4,7 @@ pub fn process_part2(input: &str) -> Result<String, Error> {
     let res = input
         .lines()
         .map(|line| {
-            let line_digits = nums_from_spelling(line);
+            let line_digits = nums_in_line(line);
 
             if line_digits.len() == 0 {
                 0
@@ -28,7 +28,7 @@ pub fn process_part2(input: &str) -> Result<String, Error> {
     }
 }
 
-fn nums_from_spelling(line: &str) -> Vec<u32> {
+fn add_nums_from_spelling(line: &str, line_pos: &usize, line_vec: &mut Vec<u32>) {
     let numbers = vec![
         ("one", 1),
         ("two", 2),
@@ -40,32 +40,30 @@ fn nums_from_spelling(line: &str) -> Vec<u32> {
         ("eight", 8),
         ("nine", 9),
     ];
-
-    let mut line_pos = 0;
-    let line_len = line.chars().count();
-
-    let mut final_vec: Vec<u32> = vec![];
-    while line_pos < line_len {
-        if let Some(first_char) = line.chars().nth(line_pos) {
-            match first_char.to_digit(10) {
-                Some(digit) => {
-                    final_vec.push(digit);
-                }
-                None => {}
+    for n in 0..numbers.len() {
+        match line.split_at(*line_pos).1.starts_with(numbers[n].0) {
+            true => {
+                line_vec.push(numbers[n].1);
             }
-        }
-        for n in 0..numbers.len() {
-            match line.split_at(line_pos).1.strip_prefix(numbers[n].0) {
-                Some(_) => {
-                    final_vec.push(numbers[n].1);
-                }
-                None => {}
-            };
-        }
-        line_pos = line_pos + 1
+            false => {}
+        };
     }
+}
+
+fn nums_in_line(line: &str) -> Vec<u32> {
+    let mut final_vec: Vec<u32> = vec![];
+    line.chars()
+        .into_iter()
+        .enumerate()
+        .for_each(|(index, curr_char)| match curr_char.to_digit(10) {
+            Some(digit) => {
+                final_vec.push(digit);
+            }
+            None => add_nums_from_spelling(line, &index, &mut final_vec),
+        });
     final_vec
 }
+
 #[cfg(test)]
 mod tests {
 
@@ -93,10 +91,10 @@ mod tests {
         let input3 = "7pqrstsixteen";
         let input4 = "mbvtbcjvv33rqfsllshb";
 
-        assert_eq!(nums_from_spelling(input1), vec![4, 8, 5, 4, 1, 8]);
-        assert_eq!(nums_from_spelling(input2), vec![1, 8, 2, 3, 4]);
-        assert_eq!(nums_from_spelling(input3), vec![7, 6]);
-        assert_eq!(nums_from_spelling(input4), vec![3, 3]);
+        assert_eq!(nums_in_line(input1), vec![4, 8, 5, 4, 1, 8]);
+        assert_eq!(nums_in_line(input2), vec![1, 8, 2, 3, 4]);
+        assert_eq!(nums_in_line(input3), vec![7, 6]);
+        assert_eq!(nums_in_line(input4), vec![3, 3]);
         Ok(())
     }
 }
