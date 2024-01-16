@@ -94,7 +94,7 @@ mod tests {
         let input4 = "mbvtbcjvv33rqfsllshb";
 
         assert_eq!(nums_from_spelling(input1), vec![4, 8, 5, 4, 1, 8]);
-        assert_eq!(nums_from_spelling(input2), vec![1, 2, 3, 4]);
+        assert_eq!(nums_from_spelling(input2), vec![1, 8, 2, 3, 4]);
         assert_eq!(nums_from_spelling(input3), vec![7, 6]);
         assert_eq!(nums_from_spelling(input4), vec![3, 3]);
         Ok(())
