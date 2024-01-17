@@ -4,7 +4,7 @@ pub fn process_part2(input: &str) -> Result<String, Error> {
     let res = input
         .lines()
         .map(|line| {
-            let line_digits = nums_in_line(line);
+            let line_digits = get_nums_in_line(line);
 
             if line_digits.len() == 0 {
                 0
@@ -50,7 +50,9 @@ fn add_nums_from_spelling(line: &str, line_pos: &usize, line_vec: &mut Vec<u32>)
     }
 }
 
-fn nums_in_line(line: &str) -> Vec<u32> {
+//In the case of overlapping numbers (eg. "threeight"), the function will include both numbers to the vector it returns.
+// See first assertion in test case 
+fn get_nums_in_line(line: &str) -> Vec<u32> {
     let mut final_vec: Vec<u32> = vec![];
     line.chars()
         .into_iter()
@@ -91,10 +93,10 @@ mod tests {
         let input3 = "7pqrstsixteen";
         let input4 = "mbvtbcjvv33rqfsllshb";
 
-        assert_eq!(nums_in_line(input1), vec![4, 8, 5, 4, 1, 8]);
-        assert_eq!(nums_in_line(input2), vec![1, 8, 2, 3, 4]);
-        assert_eq!(nums_in_line(input3), vec![7, 6]);
-        assert_eq!(nums_in_line(input4), vec![3, 3]);
+        assert_eq!(get_nums_in_line(input1), vec![4, 8, 5, 4, 1, 8]);
+        assert_eq!(get_nums_in_line(input2), vec![1, 8, 2, 3, 4]);
+        assert_eq!(get_nums_in_line(input3), vec![7, 6]);
+        assert_eq!(get_nums_in_line(input4), vec![3, 3]);
         Ok(())
     }
 }
